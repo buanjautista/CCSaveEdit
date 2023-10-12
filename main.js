@@ -217,7 +217,12 @@ function changeTab(evt, cl, tab) {
 
     // Show the current tab, and add an "active" class to the button that opened the tab
     gEle(tab).style.display = "block";
-    evt.currentTarget.className += " active";
+    if (evt.currentTarget) {
+        evt.currentTarget.className += " active";
+    }
+    else { 
+        evt.className += " active";
+    }
 }
 
 const saveCreateBtn = document.getElementById('create-save-btn')
@@ -230,25 +235,36 @@ let presetOutput
 
 const createPreset = (e) => { 
     e.preventDefault()
-    let name = gVal("save-name-box")
-    let description = gVal("save-desc-box")
-    let data = gVal("loadtext")
+    let name = gVal("save-name-box") ? gVal("save-name-box") : "Name"
+    let description = gVal("save-desc-box") ? gVal("save-desc-box") : "Description"
+    if (gVal("loadtext")) {
+        let data = gVal("loadtext") 
+        presetOutput = `{"title": {"langUid": 1,"en_US": "${name}","de_DE": "${name}","zh_CN": "${name}","ko_KR": "${name}","ja_JP": "${name}"},
+    "sub": {"langUid": 2,"en_US": "${description}","en_DE": "${description}","zh_CN": "${description}","de_DE": "${description}","ko_KR": "${description}","ja_JP": "${description}"},
+    "savefile": "${data}"}`
     
-    let presetOutput = `{"title": {"langUid": 1,"en_US": "${name}","de_DE": "${name}","zh_CN": "${name}","ko_KR": "${name}","ja_JP": "${name}"},
-"sub": {"langUid": 2,"en_US": "${description}","en_DE": "${description}","zh_CN": "${description}","de_DE": "${description}","ko_KR": "${description}","ja_JP": "${description}"},
-"savefile": "${data}"}`
-
-    outputBox.innerText = presetOutput
+        outputBox.innerText = presetOutput
+    } 
+    else {
+        alert('Please import a save on the File menu');
+        changeTab(document.getElementById('default'), 'tabcontent', 'file')
+        return false;
+    } 
 }
 
-const downloadSavePreset = (e, output) => {
+const downloadSavePreset = (e) => {
     e.preventDefault()
-    if (output == undefined && outputBox.value != undefined) { 
+    const link = document.createElement("a"); 
+    let content;
+    if (gVal('savepreset')) { 
         createPreset;
-        output = outputBox.value 
+        content = outputBox.value 
     }
-    const link = document.createElement("a");
-    const content = output;
+    console.log(content)
+    if (content == undefined || !gVal("savepreset")) { 
+        alert('Please import a valid save on the File menu');
+        return false;
+    }
     const file = new Blob([content], { type: 'text/plain' });
 
     let digit = gVal("save-digit-box")
