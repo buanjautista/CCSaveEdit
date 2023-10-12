@@ -57,6 +57,7 @@ function updateFromFile() {
     saveFile = JSON.parse(inc(s, "a"));
     gEle("savedecrypted").value = inc(s, "a");
     gEle("savespaced").value = JSON.stringify(JSON.parse(inc(s, "a")), null, 4);
+    gEle("savepreset").value = s
 
     var player = saveFile.player;
     gEle("level").value = player.level;
@@ -219,22 +220,45 @@ function changeTab(evt, cl, tab) {
     evt.currentTarget.className += " active";
 }
 
-const saveNameBox = document.getElementById('save-name-box');
-const saveDescBox = document.getElementById("save-desc-box");
 const saveCreateBtn = document.getElementById('create-save-btn')
+const downloadPresetBtn = document.getElementById('download-preset-btn')
 const outputBox = document.getElementById('save-preset-result')
-saveCreateBtn.addEventListener('click', (e) => createSaveFunction(e));
+saveCreateBtn.addEventListener('click', (e) => createPreset(e));
+downloadPresetBtn.addEventListener('click', (e, presetOutput) => downloadSavePreset(e, presetOutput));
 
-const createSaveFunction = (e) => {
+let presetOutput
+
+const createPreset = (e) => { 
     e.preventDefault()
-    let name = saveNameBox.value.toString()
-    let description = saveDescBox.value.toString()
-    let data = gVal("loadtext").toString()
+    let name = gVal("save-name-box")
+    let description = gVal("save-desc-box")
+    let data = gVal("loadtext")
     
-    let output = `{"title": {"langUid": 1,"en_US": "${name}","de_DE": "${name}","zh_CN": "${name}","ko_KR": "${name}","ja_JP": "${name}"},
+    let presetOutput = `{"title": {"langUid": 1,"en_US": "${name}","de_DE": "${name}","zh_CN": "${name}","ko_KR": "${name}","ja_JP": "${name}"},
 "sub": {"langUid": 2,"en_US": "${description}","en_DE": "${description}","zh_CN": "${description}","de_DE": "${description}","ko_KR": "${description}","ja_JP": "${description}"},
 "savefile": "${data}"}`
 
-    outputBox.innerText = output
+    outputBox.innerText = presetOutput
+}
+
+const downloadSavePreset = (e, output) => {
+    e.preventDefault()
+    if (output == undefined && outputBox.value != undefined) { 
+        createPreset;
+        output = outputBox.value 
+    }
+    const link = document.createElement("a");
+    const content = output;
+    const file = new Blob([content], { type: 'text/plain' });
+
+    let digit = gVal("save-digit-box")
+    let category = gVal("save-cat-box") ? gVal("save-cat-box") : "Any"
+    let savename = gVal("save-name-box") ? gVal("save-name-box").replaceAll(" ", "-") : "Preset"
+
+    link.href = URL.createObjectURL(file);
+    let filename = (digit + "-" + category + "-" + savename + ".json")
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
 }
 

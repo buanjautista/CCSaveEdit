@@ -119,17 +119,21 @@
         <div>
                 <label for="save-name">Preset Name</label>
                 <input type="text" name="save-name" id="save-name-box">
+                <label for="save-digit" style="margin-left: 5px">Save Number</label>
+                <input type="number" name="save-digit" id="save-digit-box" maxlength="3" size="5" value="00">
+                <label for="save-cat" style="margin-left: 5px">Category</label>
+                <input type="text" name="save-cat" id="save-cat-box" maxlength="4" size="5">
         </div>
-        <div>
+        <div style="margin-top: 5px">
             <label for="save-name">Preset Description (max 40 characters for readability)</label>
-            <input type="text" name="save-description" id="save-desc-box" maxlength="40">
+            <input type="text" name="save-description" id="save-desc-box" maxlength="40" size="40">
         </div>
-        <div><textarea id="savepreset" rows=15 cols=135></textarea></div>
-        <div><button id="create-save-btn">Create Save Preset</button></div>
+        <div><textarea id="savepreset" rows=15 cols=135 readonly placeholder="Save data, insert in File menu"></textarea></div>
+        <div><button id="create-save-btn" style="margin-top: 5px">Create Save Preset</button></div>
 
-        <h3>Result </h3>
+        <h3>Result</h3>
         <div><textarea name="save-preset-result" id="save-preset-result" cols="135" rows="15"></textarea></div>
-        <div><button>Here there would be a export preset json button if i knew how to make one</button></div>
+        <div><button id="download-preset-btn" style="margin-top: 5px">Export Preset</button></div>
     </div>
 
     <script type="text/javascript" src="itemj.js"></script>
