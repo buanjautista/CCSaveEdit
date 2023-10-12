@@ -218,3 +218,23 @@ function changeTab(evt, cl, tab) {
     gEle(tab).style.display = "block";
     evt.currentTarget.className += " active";
 }
+
+const saveNameBox = document.getElementById('save-name-box');
+const saveDescBox = document.getElementById("save-desc-box");
+const saveCreateBtn = document.getElementById('create-save-btn')
+const outputBox = document.getElementById('save-preset-result')
+saveCreateBtn.addEventListener('click', (e) => createSaveFunction(e));
+
+const createSaveFunction = (e) => {
+    e.preventDefault()
+    let name = saveNameBox.value.toString()
+    let description = saveDescBox.value.toString()
+    let data = gVal("loadtext").toString()
+    
+    let output = `{"title": {"langUid": 1,"en_US": "${name}","de_DE": "${name}","zh_CN": "${name}","ko_KR": "${name}","ja_JP": "${name}"},
+"sub": {"langUid": 2,"en_US": "${description}","en_DE": "${description}","zh_CN": "${description}","de_DE": "${description}","ko_KR": "${description}","ja_JP": "${description}"},
+"savefile": "${data}"}`
+
+    outputBox.innerText = output
+}
+
