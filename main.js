@@ -60,6 +60,7 @@ function updateFromFile() {
     gEle("savepreset").value = s
 
     var player = saveFile.player;
+    var party = saveFile.party;
     gEle("level").value = player.level;
     gEle("exp").value = player.exp;
     gEle("hp").value = player.hp;
@@ -75,6 +76,9 @@ function updateFromFile() {
     gEle("rightarm").value = getItemNameById(player.equip.rightArm);
     gEle("torso").value = getItemNameById(player.equip.torso);
     gEle("feet").value = getItemNameById(player.equip.feet);
+    console.log("Current Party: ", party.currentParty)
+    gEle("currentparty").innerText = party.currentParty
+
 
     /*var flags = saveFile.vars.storage.maps;
     gEle("bossCold1").checked = flags["coldDng/b3/room7"].bossKilled;
@@ -94,6 +98,7 @@ function updateFromFile() {
 
 function updateFromPlayer() {
     var player = saveFile.player;
+    var party = saveFile.party
     player.level = strToNum(gVal("level"));
     player.exp = strToNum(gVal("exp"));
     player.hp = strToNum(gVal("hp"));
@@ -110,6 +115,11 @@ function updateFromPlayer() {
     player.equip.torso = getItemIdByName(gVal("torso"));
     player.equip.feet = getItemIdByName(gVal("feet"));
 
+    party.currentParty = addToParty()
+    gVal("partylevelcheck") && (party.models = setPartyLevel())
+    // console.log("New party: ", party.currentParty)
+
+    saveFile.party = party;
     saveFile.player = player;
     updateTextareas();
     alert("Player data updated.");
@@ -121,6 +131,35 @@ function updateFromInventory() {
     saveFile.player.items = inv;
     updateTextareas();
     alert("Inventory updated.");
+}
+
+function updateFromQuests() {
+    console.log('soon :tm:')
+    alert("eventually");
+    // alert("Quests updated.");
+}
+
+function addToParty() {
+    let partyField = gEle('partymembers').elements
+    let newParty = []
+    for (let i of partyField) {
+        i.checked && newParty.push(i.value)
+        // console.log(i, newParty)
+    }
+    return newParty
+}
+
+function setPartyLevel() {
+    var partyModels = saveFile.party.models
+    var player = saveFile.player
+    // console.log(partyModels)
+
+    for (let i of Object.values(partyModels)) {
+        i.level = player.level
+        // console.log(i)
+    }
+    // console.log(party)
+    return partyModels
 }
 
 /*function updateFromFlags() {

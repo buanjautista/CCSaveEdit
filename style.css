@@ -91,3 +91,26 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.flex {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+}
+
+.info-box {
+    padding: 10px 20px;
+    margin-top: 28px;
+    margin-bottom: 2px;
+    border: 1px solid gray;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+}
+
+fieldset#partymembers {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 2fr;
+    margin-top: 25px;
+}
