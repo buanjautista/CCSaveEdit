@@ -1,4 +1,5 @@
 var saveFile;
+var mapList = maplistEntries.maps;
 var items = itemj.items;
 var invsort = [[],[],[],[],[],[],[],[]];
 
@@ -24,6 +25,40 @@ for (var i = 0; i < items.length; i++) {
     
     invsort[cat].push(aaaa);
 }
+
+// console.log(mapList)
+for (let map of Object.keys(mapList)) {
+    let mapoption = document.createElement('option')
+    mapoption.innerHTML = `<option id='${map}' value='${map}'>${map}</option>`
+    // console.log(mapdiv)
+    gEle("selectmaplist").appendChild(mapoption)
+}
+
+const updateSelectValues = (e) => {
+    // get map from the maplist, then extract all the markers and add them to select
+    // console.log(e)
+    let map = mapList[e.target.value]
+    let entryMenu = gEle("selectentrance")
+    entryMenu.innerHTML = ""
+    if (map.markers.length > 0) {
+        for (let i = 0; i < map.markers.length ; i++) {
+            let markerdiv = document.createElement('option')
+            markerdiv.value = map.markers[i]
+            markerdiv.id = `marker${i}`
+            markerdiv.text = map.markers[i]
+            entryMenu.appendChild(markerdiv)
+            // console.log(markerdiv)
+        }
+    }
+    else {
+        let markeroption = document.createElement('option')
+        markeroption.value = "entrance"
+        markeroption.id = "marker0"
+        markeroption.text = "default"
+        entryMenu.appendChild(markeroption)
+    }
+}
+gEle("selectmaplist").addEventListener('change', updateSelectValues)
 
 var itemCount = 0;
 for (var i = 0; i < invsort.length; i++) {
@@ -76,8 +111,12 @@ function updateFromFile() {
     gEle("rightarm").value = getItemNameById(player.equip.rightArm);
     gEle("torso").value = getItemNameById(player.equip.torso);
     gEle("feet").value = getItemNameById(player.equip.feet);
-    console.log("Current Party: ", party.currentParty)
+
     gEle("currentparty").innerText = party.currentParty
+
+    gEle("currentmap").innerText = saveFile.map
+    gEle("selectentrance").value = saveFile.position.marker
+    gEle("selectmaplist").value = saveFile.map
 
 
     /*var flags = saveFile.vars.storage.maps;
@@ -99,6 +138,8 @@ function updateFromFile() {
 function updateFromPlayer() {
     var player = saveFile.player;
     var party = saveFile.party
+    var newMap = saveFile.map
+    var newMarker = saveFile.position.marker
     player.level = strToNum(gVal("level"));
     player.exp = strToNum(gVal("exp"));
     player.hp = strToNum(gVal("hp"));
@@ -119,8 +160,14 @@ function updateFromPlayer() {
     gVal("partylevelcheck") && (party.models = setPartyLevel())
     // console.log("New party: ", party.currentParty)
 
+    newMap = gVal("selectmaplist")
+    newMarker = gVal("selectentrance") || "entrance"
+    
+
     saveFile.party = party;
     saveFile.player = player;
+    saveFile.map = newMap
+    saveFile.position.marker = newMarker
     updateTextareas();
     alert("Player data updated.");
 }
@@ -148,7 +195,6 @@ function addToParty() {
     }
     return newParty
 }
-
 function setPartyLevel() {
     var partyModels = saveFile.party.models
     var player = saveFile.player
@@ -160,6 +206,13 @@ function setPartyLevel() {
     }
     // console.log(party)
     return partyModels
+}
+
+function getCurrentMap() {
+    var currentMap = saveFile.map
+    var currentEntrance = saveFile.position.marker
+
+    return { map: currentMap, marker: currentEntrance}
 }
 
 /*function updateFromFlags() {
@@ -316,4 +369,20 @@ const downloadSavePreset = (e) => {
     link.click();
     URL.revokeObjectURL(link.href);
 }
-
+gEle("advanced-checker").addEventListener('change', () => {
+    let checkValue = gEle("advanced-checker").checked
+    let advancedList = document.querySelectorAll('.advanced')
+    for (let i = 0; i < advancedList.length; i++) {
+        checkValue ? advancedList[i].style.display = "block" : advancedList[i].style.display = "none"
+    }
+    localStorage.setItem('CC-Save-Exit-Extras', checkValue)
+})
+window.addEventListener('load', () => {
+    console.log("loading checkbox")
+    let checkValue = localStorage.getItem('CC-Save-Exit-Extras')
+    gEle("advanced-checker").checked = checkValue
+    let advancedList = document.querySelectorAll('.advanced')
+    for (let i = 0; i < advancedList.length; i++) {
+        checkValue ? advancedList[i].style.display = "block" : advancedList[i].style.display = "none"
+    }
+})

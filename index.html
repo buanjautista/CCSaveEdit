@@ -16,7 +16,7 @@
         <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'quests')">Quests</button>
         <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'decrypted')">Decrypted</button>
         <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'spaced')">Spaced</button>
-        <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'save-preset')">Save Presets</button>
+        <button class="tablinks advanced" onclick="changeTab(event, 'tabcontent', 'save-preset')" style="display: none;">Save Presets</button>
     </div>
 
     <div id="file" class="tabcontent">
@@ -65,33 +65,48 @@
             </div>
 
             <div>
-                <h3>Party</h3>
-                <div class="indent">
-                    <fieldset>
-                        <legend>Current Members</legend>
-                        <div id="currentparty"></div>
-                    </fieldset>
-                    
+                <div>
+                    <h3>Party</h3>
+                    <div class="indent">
+                        <fieldset>
+                            <legend>Current Members</legend>
+                            <div id="currentparty"></div>
+                        </fieldset>
+                        
+                    </div>
+    
+                    <div class="indent">
+                        <fieldset name="partyMembers" id="partymembers">
+                            <legend>Add Members (max 2 ideally)</legend>
+                            <input type="checkbox" value="Emilie">Emilie</input>
+                            <input type="checkbox" value="Glasses">C'tron</input>
+                            <input type="checkbox" value="Apollo">Apollo</input>
+                            <input type="checkbox" value="Joern">Joern</input>
+                            <input type="checkbox" value="Shizuka">Shizuka</input>
+                            <input type="checkbox" value="Schneider">Schneider</input>
+                            <input type="checkbox" value="Schneider2">Luke (DLC)</input>
+                            <input type="checkbox" value="Hlin">Hlin</input>
+                            <input type="checkbox" value="Grumpy">Grumpy</input>
+                            <input type="checkbox" value="Buggy">Buggy</input>
+                            <input type="checkbox" value="Shizuka0">Shizuka (intro)</input>
+                            <input type="checkbox" value="Lea">Lea</input>
+                        </fieldset>
+                        <input type="checkbox" id="partylevelcheck">Set party level to player's</input>
+                        <!-- <button onclick="setPartyLevel()">Set party level to player's</button> -->
+                    </div>
                 </div>
 
-                <div class="indent">
-                    <fieldset name="partyMembers" id="partymembers">
-                        <legend>Add Members (max 2 ideally)</legend>
-                        <input type="checkbox" value="Emilie">Emilie</input>
-                        <input type="checkbox" value="Glasses">C'tron</input>
-                        <input type="checkbox" value="Apollo">Apollo</input>
-                        <input type="checkbox" value="Joern">Joern</input>
-                        <input type="checkbox" value="Shizuka">Shizuka</input>
-                        <input type="checkbox" value="Schneider">Schneider</input>
-                        <input type="checkbox" value="Schneider2">Luke (DLC)</input>
-                        <input type="checkbox" value="Hlin">Hlin</input>
-                        <input type="checkbox" value="Grumpy">Grumpy</input>
-                        <input type="checkbox" value="Buggy">Buggy</input>
-                        <input type="checkbox" value="Shizuka0">Shizuka (intro)</input>
-                        <input type="checkbox" value="Lea">Lea</input>
-                    </fieldset>
-                    <input type="checkbox" id="partylevelcheck">Set party level to player's</input>
-                    <!-- <button onclick="setPartyLevel()">Set party level to player's</button> -->
+                <div class="indent advanced" style="display: none;">
+                    <div>
+                        <h4>Current Map: </h4>
+                        <span id="currentmap"></span>
+                    </div>
+                    <div class="indent">
+                        <label for="selectmaplist">Map</label>
+                        <select name="selectmaplist" id="selectmaplist">New Map</select>
+                        <label for="selectentrance">Current Entrance</label>
+                        <select name="selectentrance" id="selectentrance"><option value="entrance">Entrance</option></select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -187,7 +202,14 @@
         <div><button id="download-preset-btn" style="margin-top: 5px">Export Preset</button></div>
     </div>
 
+    <div class="edge-right">
+        <label for="advanced-checker">Extra options</label>
+        <input type="checkbox" name="advanced-checker" id="advanced-checker">
+    </div>
+
+
     <script type="text/javascript" src="itemj.js"></script>
+    <script type="text/javascript" src="maplistentries.js"></script>
     <script type="text/javascript" src="main.js"></script>
 </body>
 
