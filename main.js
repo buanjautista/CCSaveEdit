@@ -107,11 +107,11 @@ function updateFromFile() {
     gEle("skillcold").value = player.skillPoints[2];
     gEle("skillshock").value = player.skillPoints[3];
     gEle("skillwave").value = player.skillPoints[4];
-    if (getItemNameById(player.equip.head) >= 0) { gEle("head").value = getItemNameById(player.equip.head) };
-    if (getItemNameById(player.equip.leftArm) >= 0) { gEle("leftarm").value = getItemNameById(player.equip.leftArm)};
-    if (getItemNameById(player.equip.rightArm) >= 0) { gEle("rightarm").value = getItemNameById(player.equip.rightArm)};
-    if (getItemNameById(player.equip.torso) >= 0) { gEle("torso").value = getItemNameById(player.equip.torso)};
-    if (getItemNameById(player.equip.feet) >= 0) { gEle("feet").value = getItemNameById(player.equip.feet)};
+    if (player.equip.head >= 0) { gEle("head").value = getItemNameById(player.equip.head) };
+    if (player.equip.leftArm >= 0) { gEle("leftarm").value = getItemNameById(player.equip.leftArm)};
+    if (player.equip.rightArm >= 0) { gEle("rightarm").value = getItemNameById(player.equip.rightArm)};
+    if (player.equip.torso >= 0) { gEle("torso").value = getItemNameById(player.equip.torso)};
+    if (player.equip.feet >= 0) { gEle("feet").value = getItemNameById(player.equip.feet)};
 
     // Party and Map
     gEle("currentparty").innerText = party.currentParty
@@ -423,6 +423,7 @@ function updateTextareas() {
 // UTILS
 
 function getItemNameById(n) {
+    if (n < 0 || n > items.length) return "";
     return items[n].name.en_US;
 }
 
