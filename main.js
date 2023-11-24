@@ -96,6 +96,7 @@ function updateFromFile() {
 
     var player = saveFile.player;
     var party = saveFile.party;
+    var ngPlus = saveFile.newGamePlus;
     gEle("level").value = player.level;
     gEle("exp").value = player.exp;
     gEle("hp").value = player.hp;
@@ -112,11 +113,38 @@ function updateFromFile() {
     gEle("torso").value = getItemNameById(player.equip.torso);
     gEle("feet").value = getItemNameById(player.equip.feet);
 
+    // Party and Map
     gEle("currentparty").innerText = party.currentParty
 
     gEle("currentmap").innerText = saveFile.map
     gEle("selectentrance").value = saveFile.position.marker
     gEle("selectmaplist").value = saveFile.map
+
+    // New Game Plus settings
+
+    gEle("ngplus-enable").checked = ngPlus.active   
+    if (ngPlus.active) {
+        showNGOptions()
+        let selectableOptions = gEle('ngoptions').children[0].children
+        let checkboxOptions = gEle('ngoptions').children[1].children
+        for (let i of selectableOptions) {
+            let currentEntry = i.children[1]
+            currentEntry.value = "none" 
+            for (let entry in Object.keys(currentEntry)) {
+                if (ngPlus.options[currentEntry.children[entry].value]) {
+                    console.log(currentEntry.children[entry].value)
+                    currentEntry.value = currentEntry.children[entry].value
+                }
+            }
+        }
+        for (let i of checkboxOptions) {
+            let currentEntry = i.children[0]
+            currentEntry.checked = false;
+            if (ngPlus.options[currentEntry.name]) {
+                currentEntry.checked = true;
+            }
+        }
+    }
 
 
     /*var flags = saveFile.vars.storage.maps;
@@ -163,7 +191,6 @@ function updateFromPlayer() {
     newMap = gVal("selectmaplist")
     newMarker = gVal("selectentrance") || "entrance"
     
-
     saveFile.party = party;
     saveFile.player = player;
     saveFile.map = newMap
@@ -185,6 +212,8 @@ function updateFromQuests() {
     alert("eventually");
     // alert("Quests updated.");
 }
+
+// Party and Current Map
 
 function addToParty() {
     let partyField = gEle('partymembers').elements
@@ -214,6 +243,138 @@ function getCurrentMap() {
 
     return { map: currentMap, marker: currentEntrance}
 }
+
+// New Game options
+
+function updateFromNGPlus() {
+    var ngPlus = getNGPlusData()
+    // console.log(ngPlus)
+    if (gEle('ngplus-enable').checked) { 
+        saveFile.newGamePlus = ngPlus
+        alert("New Game Plus data updated");
+        updateTextareas();
+    }
+    // console.log(saveFile)
+}
+
+function showNGOptions() {
+    gEle('ngplus-enable').checked 
+        ? gEle('ngoptions').style = `display: block;`
+        : gEle('ngoptions').style = `display: none;`
+}
+
+const ngPlusEnabler = document.getElementById('ngplus-enable')
+ngPlusEnabler.addEventListener('change', showNGOptions)
+
+function getNGPlusData() {
+    let ngData = { "options": {}, "active": true, "store": {} }
+    let options = {}
+    // let store = saveFile.newGamePlus.store || {}
+    let selectableOptions = gEle('ngoptions').children[0].children
+    let checkboxOptions = gEle('ngoptions').children[1].children
+    for (let i of selectableOptions) {
+        let currentValue = i.children[1].value
+        if (currentValue && (currentValue != "none")) {
+            options[currentValue] = true;
+        }
+    }
+    for (let i of checkboxOptions) {
+        let currentEntry = i.children[0]
+        if (currentEntry.checked) {
+            options[currentEntry.name] = true;
+        }
+    }
+    ngData.options = options
+    return ngData
+}
+
+
+
+// Save Presets 
+
+const saveCreateBtn = document.getElementById('create-save-btn')
+const downloadPresetBtn = document.getElementById('download-preset-btn')
+const outputBox = document.getElementById('save-preset-result')
+saveCreateBtn.addEventListener('click', (e) => createPreset(e));
+downloadPresetBtn.addEventListener('click', (e, presetOutput) => downloadSavePreset(e, presetOutput));
+
+let presetOutput
+
+const createPreset = (e) => { 
+    e.preventDefault()
+    let name = gVal("save-name-box") ? gVal("save-name-box") : "Name"
+    let description = gVal("save-desc-box") ? gVal("save-desc-box") : "Description"
+    if (gVal("loadtext")) {
+        let data = gVal("loadtext") 
+        presetOutput = `{"title": {"langUid": 1,"en_US": "${name}","de_DE": "${name}","zh_CN": "${name}","ko_KR": "${name}","ja_JP": "${name}"},
+    "sub": {"langUid": 2,"en_US": "${description}","en_DE": "${description}","zh_CN": "${description}","de_DE": "${description}","ko_KR": "${description}","ja_JP": "${description}"},
+    "savefile": "${data}"}`
+    
+        outputBox.innerText = presetOutput
+    } 
+    else {
+        alert('Please import a save on the File menu');
+        changeTab(document.getElementById('default'), 'tabcontent', 'file')
+        return false;
+    } 
+}
+
+const downloadSavePreset = (e) => {
+    e.preventDefault()
+    const link = document.createElement("a"); 
+    let content;
+    if (gVal('savepreset')) { 
+        createPreset;
+        content = outputBox.value 
+    }
+    // console.log(content)
+    if (content == undefined || !gVal("savepreset")) { 
+        alert('Please import a valid save on the File menu');
+        return false;
+    }
+    const file = new Blob([content], { type: 'text/plain' });
+
+    let digit = gVal("save-digit-box")
+    let category = gVal("save-cat-box") ? gVal("save-cat-box") : "Any"
+    let savename = gVal("save-name-box") ? gVal("save-name-box").replaceAll(" ", "-") : "Preset"
+
+    link.href = URL.createObjectURL(file);
+    let filename = (digit + "-" + category + "-" + savename + ".json")
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
+
+// Advanced Options
+gEle("advanced-checker").addEventListener('change', () => {
+    let checkValue = gEle("advanced-checker").checked
+    let advancedList = document.querySelectorAll('.advanced')
+    for (let i = 0; i < advancedList.length; i++) {
+        checkValue ? advancedList[i].style.display = "block" : advancedList[i].style.display = "none"
+    }
+    localStorage.setItem('CC-Save-Exit-Extras', checkValue)
+})
+
+// Keep settings from last session
+window.addEventListener('load', () => {
+    console.log("loading checkbox")
+    let checkValue = localStorage.getItem('CC-Save-Exit-Extras')
+    gEle("advanced-checker").checked = checkValue
+    gEle('ngplus-enable').checked = false
+    let advancedList = document.querySelectorAll('.advanced')
+    for (let i = 0; i < advancedList.length; i++) {
+        checkValue ? advancedList[i].style.display = "block" : advancedList[i].style.display = "none"
+    }
+
+    let selectableOptions = gEle('ngoptions').children[0].children
+    let checkboxOptions = gEle('ngoptions').children[1].children
+    for (let i of selectableOptions) {
+        i.children[1].value = "none"
+    }
+    for (let i of checkboxOptions) {
+        i.children[0].checked = false
+    }
+})
 
 /*function updateFromFlags() {
     var flags = saveFile.vars.storage.maps;
@@ -253,6 +414,8 @@ function updateTextareas() {
     gEle("savespaced").value = JSON.stringify(saveFile, null, 4);
     gEle("loadtext").value = outc(JSON.stringify(saveFile), "a");
 }
+
+// UTILS
 
 function getItemNameById(n) {
     return items[n].name.en_US;
@@ -316,73 +479,3 @@ function changeTab(evt, cl, tab) {
         evt.className += " active";
     }
 }
-
-const saveCreateBtn = document.getElementById('create-save-btn')
-const downloadPresetBtn = document.getElementById('download-preset-btn')
-const outputBox = document.getElementById('save-preset-result')
-saveCreateBtn.addEventListener('click', (e) => createPreset(e));
-downloadPresetBtn.addEventListener('click', (e, presetOutput) => downloadSavePreset(e, presetOutput));
-
-let presetOutput
-
-const createPreset = (e) => { 
-    e.preventDefault()
-    let name = gVal("save-name-box") ? gVal("save-name-box") : "Name"
-    let description = gVal("save-desc-box") ? gVal("save-desc-box") : "Description"
-    if (gVal("loadtext")) {
-        let data = gVal("loadtext") 
-        presetOutput = `{"title": {"langUid": 1,"en_US": "${name}","de_DE": "${name}","zh_CN": "${name}","ko_KR": "${name}","ja_JP": "${name}"},
-    "sub": {"langUid": 2,"en_US": "${description}","en_DE": "${description}","zh_CN": "${description}","de_DE": "${description}","ko_KR": "${description}","ja_JP": "${description}"},
-    "savefile": "${data}"}`
-    
-        outputBox.innerText = presetOutput
-    } 
-    else {
-        alert('Please import a save on the File menu');
-        changeTab(document.getElementById('default'), 'tabcontent', 'file')
-        return false;
-    } 
-}
-
-const downloadSavePreset = (e) => {
-    e.preventDefault()
-    const link = document.createElement("a"); 
-    let content;
-    if (gVal('savepreset')) { 
-        createPreset;
-        content = outputBox.value 
-    }
-    console.log(content)
-    if (content == undefined || !gVal("savepreset")) { 
-        alert('Please import a valid save on the File menu');
-        return false;
-    }
-    const file = new Blob([content], { type: 'text/plain' });
-
-    let digit = gVal("save-digit-box")
-    let category = gVal("save-cat-box") ? gVal("save-cat-box") : "Any"
-    let savename = gVal("save-name-box") ? gVal("save-name-box").replaceAll(" ", "-") : "Preset"
-
-    link.href = URL.createObjectURL(file);
-    let filename = (digit + "-" + category + "-" + savename + ".json")
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(link.href);
-}
-gEle("advanced-checker").addEventListener('change', () => {
-    let checkValue = gEle("advanced-checker").checked
-    let advancedList = document.querySelectorAll('.advanced')
-    for (let i = 0; i < advancedList.length; i++) {
-        checkValue ? advancedList[i].style.display = "block" : advancedList[i].style.display = "none"
-    }
-    localStorage.setItem('CC-Save-Exit-Extras', checkValue)
-})
-window.addEventListener('load', () => {
-    console.log("loading checkbox")
-    let checkValue = localStorage.getItem('CC-Save-Exit-Extras')
-    gEle("advanced-checker").checked = checkValue
-    let advancedList = document.querySelectorAll('.advanced')
-    for (let i = 0; i < advancedList.length; i++) {
-        checkValue ? advancedList[i].style.display = "block" : advancedList[i].style.display = "none"
-    }
-})

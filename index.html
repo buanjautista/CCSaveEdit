@@ -16,6 +16,7 @@
         <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'quests')">Quests</button>
         <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'decrypted')">Decrypted</button>
         <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'spaced')">Spaced</button>
+        <button class="tablinks advanced" onclick="changeTab(event, 'tabcontent', 'new-game-plus')" style="display: none;">New Game +</button>
         <button class="tablinks advanced" onclick="changeTab(event, 'tabcontent', 'save-preset')" style="display: none;">Save Presets</button>
     </div>
 
@@ -179,6 +180,147 @@
     <div id="spaced" class="tabcontent">
         <button onclick="updateFromSpaced()" style="margin-bottom: 5px">Apply Changes</button>
         <div><textarea id="savespaced" rows=37 cols=80></textarea></div>
+    </div>
+
+    <div id="new-game-plus" class="tabcontent">
+        <div>
+            <button onclick="updateFromNGPlus()" style="margin-bottom: 5px">Apply Changes</button>
+            <h3>Enable New Game+
+                <input type="checkbox" name="ngplus-enable" id="ngplus-enable">
+            </h3>
+            <!-- <button onclick="getNGPlusData()">Send</button> -->
+        </div>
+
+        <div id="ngoptions" style="display: none;">
+            <!-- <div>Keep:
+                <label for="keep-level">Level</label><input type="checkbox" name="keep-level" id="keep-level">
+                <label for="keep-consumables">Consumables</label><input type="checkbox" name="keep-consumables" id="keep-consumables">
+                <label for="keep-equipment">Equipment</label><input type="checkbox" name="keep-equipment" id="keep-equipment">
+                <label for="keep-elements">Elements</label><input type="checkbox" name="keep-elements" id="keep-elements">
+            </div> -->
+            <!-- <label for="">Skip Beginning</label><input type="checkbox" name="" id=""> -->
+            <div class="select-grid" style="margin-bottom: 15px">
+                <div><h3>EXP</h3>
+                    <select name="exp-plus" id="exp-plus">
+                        <option value="none">Standard</option>
+                        <option value="exp-plus-2">X2</option>
+                        <option value="exp-plus-4">X4</option>
+                        <option value="disable-exp">Disabled</option>
+                    </select>
+                </div>
+                <div><h3>Money</h3>
+                    <select name="money-plus" id="money-plus">
+                        <option value="none">Standard</option>
+                        <option value="money-plus-2">X2</option>
+                        <option value="money-plus-4">X4</option>
+                        <option value="disable-money">Disabled</option>
+                    </select>
+                </div>
+                <div><h3>Drop Rate</h3>
+                    <select name="drop-rate" id="drop-rate">
+                        <option value="none">Standard</option>
+                        <option value="drop-rate-2">X2</option>
+                        <option value="drop-rate-4">X4</option>
+                    </select>
+                </div>
+                <div><h3>Item CD</h3>
+                    <select name="item-cd" id="item-cd">
+                        <option value="none">Standard</option>
+                        <option value="item-cd-double">Double</option>
+                        <option value="item-cd-half">Half</option>
+                        <option value="item-cd-zero">Disable</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>Combat Regen</h3>
+                    <select name="combat-regen" id="combat-regen">
+                        <option value="none">Standard</option>
+                        <option value="combat-regen-half">Half Regen</option>
+                        <option value="combat-regen-zero">No Regen</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>Damage Received</h3>
+                    <select name="enemy-damage" id="enemy-damage">
+                        <option value="none">Standard</option>
+                        <option value="enemy-damage-15">x0.75</option>
+                        <option value="enemy-damage-2">X2</option>
+                        <option value="enemy-damage-4">X4</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>Combat Arts</h3>
+                    <select name="combat-arts-level" id="combat-arts-level">
+                        <option value="none">Standard</option>
+                        <option value="combat-arts-level-1">Up to Level 1</option>
+                        <option value="combat-arts-level-2">Up to Level 2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="select-grid" style="margin-bottom: 5px">
+                <div class="flex-between"> 
+                    <input type="checkbox" name="enemy-aggro" id="enemy-aggro"> 
+                    <label for="enemy-aggro">Hostile Habitat</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="infinite-sp" id="infinite-sp"> 
+                    <label for="infinite-sp">Infinite SP</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="dash-1" id="dash-1"> 
+                    <label for="dash-1">Dash Master</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="sergey-hax" id="sergey-hax"> 
+                    <label for="sergey-hax">Sergey Hax</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="overload-disable" id="overload-disable"> 
+                    <label for="overload-disable">Disable Overload</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="lea-must-die" id="lea-must-die"> 
+                    <label for="lea-must-die">Prepare to Hi!</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="scale-enemies" id="scale-enemies"> 
+                    <label for="scale-enemies">Get on my Level</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="harder-enemies" id="harder-enemies"> 
+                    <label for="harder-enemies">No Mercy</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="ice-physics" id="ice-physics"> 
+                    <label for="ice-physics">Slippery Slope</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="waypoints-teleport" id="waypoints-teleport"> 
+                    <label for="waypoints-teleport">Classic Porter</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="waypoints-heals" id="waypoints-heals"> 
+                    <label for="waypoints-heals">Classic Heals</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="item-cd-zero" id="item-cd-zero"> 
+                    <label for="item-cd-zero">Item CD Zero</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="witch-time" id="witch-time"> 
+                    <label for="witch-time">Witch Time</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="remove-skill-blocks" id="remove-skill-blocks"> 
+                    <label for="remove-skill-blocks">Remove Skill Block</label>
+                </div>
+                <div class="flex-between"> 
+                    <input type="checkbox" name="double-buff-time" id="double-buff-time"> 
+                    <label for="double-buff-time">Double Buff Time</label>
+                </div>
+            </div>
+            
+        </div>
     </div>
 
     <div id="save-preset" class="tabcontent">

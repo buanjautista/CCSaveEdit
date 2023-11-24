@@ -118,3 +118,17 @@ fieldset#partymembers {
 .edge-right {
     text-align: end;
 }
+
+.select-grid {
+    display:grid;
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+}
+
+.flex-between {
+    display:flex;
+    justify-content: space-between;
+}
+
+.flex-between>label {
+    margin-right: auto;
+}
