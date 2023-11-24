@@ -132,7 +132,6 @@ function updateFromFile() {
             currentEntry.value = "none" 
             for (let entry in Object.keys(currentEntry)) {
                 if (ngPlus.options[currentEntry.children[entry].value]) {
-                    console.log(currentEntry.children[entry].value)
                     currentEntry.value = currentEntry.children[entry].value
                 }
             }
@@ -248,13 +247,12 @@ function getCurrentMap() {
 
 function updateFromNGPlus() {
     var ngPlus = getNGPlusData()
-    // console.log(ngPlus)
+
     if (gEle('ngplus-enable').checked) { 
         saveFile.newGamePlus = ngPlus
-        alert("New Game Plus data updated");
         updateTextareas();
+        alert("New Game Plus data updated");
     }
-    // console.log(saveFile)
 }
 
 function showNGOptions() {
@@ -269,7 +267,8 @@ ngPlusEnabler.addEventListener('change', showNGOptions)
 function getNGPlusData() {
     let ngData = { "options": {}, "active": true, "store": {} }
     let options = {}
-    // let store = saveFile.newGamePlus.store || {}
+    let store = saveFile.newGamePlus.store || {}
+
     let selectableOptions = gEle('ngoptions').children[0].children
     let checkboxOptions = gEle('ngoptions').children[1].children
     for (let i of selectableOptions) {
@@ -284,7 +283,9 @@ function getNGPlusData() {
             options[currentEntry.name] = true;
         }
     }
+
     ngData.options = options
+    ngData.store = store
     return ngData
 }
 
