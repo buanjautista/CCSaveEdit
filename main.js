@@ -247,7 +247,9 @@ function getCurrentMap() {
 
 function updateFromNGPlus() {
     var ngPlus = getNGPlusData()
-
+    if (saveFile.newGamePlus && !gEle('ngplus-enable').checked) {
+        saveFile.newGamePlus.active = false
+     }
     if (gEle('ngplus-enable').checked) { 
         saveFile.newGamePlus = ngPlus
         updateTextareas();
