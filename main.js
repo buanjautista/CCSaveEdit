@@ -122,8 +122,8 @@ function updateFromFile() {
 
     // New Game Plus settings
 
-    gEle("ngplus-enable").checked = ngPlus.active   
-    if (ngPlus.active) {
+    if (ngPlus) {
+        gEle("ngplus-enable").checked = ngPlus.active   
         showNGOptions()
         let selectableOptions = gEle('ngoptions').children[0].children
         let checkboxOptions = gEle('ngoptions').children[1].children
@@ -247,9 +247,11 @@ function getCurrentMap() {
 
 function updateFromNGPlus() {
     var ngPlus = getNGPlusData()
-    if (saveFile.newGamePlus && !gEle('ngplus-enable').checked) {
+    if (saveFile && saveFile.newGamePlus && !gEle('ngplus-enable').checked) {
         saveFile.newGamePlus.active = false
-     }
+        updateTextareas();
+        alert("New Game Plus data updated");
+    }
     if (gEle('ngplus-enable').checked) { 
         saveFile.newGamePlus = ngPlus
         updateTextareas();
@@ -269,7 +271,7 @@ ngPlusEnabler.addEventListener('change', showNGOptions)
 function getNGPlusData() {
     let ngData = { "options": {}, "active": true, "store": {} }
     let options = {}
-    let store = saveFile.newGamePlus.store || {}
+    let store = saveFile.newGamePlus ? saveFile.newGamePlus.store : {}
 
     let selectableOptions = gEle('ngoptions').children[0].children
     let checkboxOptions = gEle('ngoptions').children[1].children
