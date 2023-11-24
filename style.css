@@ -132,3 +132,12 @@ fieldset#partymembers {
 .flex-between>label {
     margin-right: auto;
 }
+
+.extra-opts {
+    font-size: 18px;
+}
+
+.extra-opts>input {
+    height: 24px;
+    width: 24px;
+}

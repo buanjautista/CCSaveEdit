@@ -13,10 +13,10 @@
         <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'player')" id="onload">Player</button>
         <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'inventory')">Inventory</button>
         <!--<button class="tablinks" onclick="changeTab(event, 'tabcontent', 'flags')">Flags</button>-->
-        <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'quests')">Quests</button>
+        <!-- <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'quests')">Quests</button> -->
+        <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'new-game-plus')">New Game +</button>
         <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'decrypted')">Decrypted</button>
         <button class="tablinks" onclick="changeTab(event, 'tabcontent', 'spaced')">Spaced</button>
-        <button class="tablinks advanced" onclick="changeTab(event, 'tabcontent', 'new-game-plus')" style="display: none;">New Game +</button>
         <button class="tablinks advanced" onclick="changeTab(event, 'tabcontent', 'save-preset')" style="display: none;">Save Presets</button>
     </div>
 
@@ -172,16 +172,6 @@
         TODO
     </div>
 
-    <div id="decrypted" class="tabcontent">
-        <button onclick="updateFromDecrypted()" style="margin-bottom: 5px">Apply Changes</button>
-        <div><textarea id="savedecrypted" rows=37 cols=80></textarea></div>
-    </div>
-
-    <div id="spaced" class="tabcontent">
-        <button onclick="updateFromSpaced()" style="margin-bottom: 5px">Apply Changes</button>
-        <div><textarea id="savespaced" rows=37 cols=80></textarea></div>
-    </div>
-
     <div id="new-game-plus" class="tabcontent">
         <div>
             <button onclick="updateFromNGPlus()" style="margin-bottom: 5px">Apply Changes</button>
@@ -323,6 +313,16 @@
         </div>
     </div>
 
+    <div id="decrypted" class="tabcontent">
+        <button onclick="updateFromDecrypted()" style="margin-bottom: 5px">Apply Changes</button>
+        <div><textarea id="savedecrypted" rows=37 cols=80></textarea></div>
+    </div>
+
+    <div id="spaced" class="tabcontent">
+        <button onclick="updateFromSpaced()" style="margin-bottom: 5px">Apply Changes</button>
+        <div><textarea id="savespaced" rows=37 cols=80></textarea></div>
+    </div>
+
     <div id="save-preset" class="tabcontent">
         <div style="margin-top: 5px">
                 <label for="save-name">Preset Name</label>
@@ -344,7 +344,7 @@
         <div><button id="download-preset-btn" style="margin-top: 5px">Export Preset</button></div>
     </div>
 
-    <div class="edge-right">
+    <div class="edge-right extra-opts">
         <label for="advanced-checker">Extra options</label>
         <input type="checkbox" name="advanced-checker" id="advanced-checker">
     </div>
