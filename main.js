@@ -107,11 +107,11 @@ function updateFromFile() {
     gEle("skillcold").value = player.skillPoints[2];
     gEle("skillshock").value = player.skillPoints[3];
     gEle("skillwave").value = player.skillPoints[4];
-    if (player.equip.head >= 0) { gEle("head").value = getItemNameById(player.equip.head) };
-    if (player.equip.leftArm >= 0) { gEle("leftarm").value = getItemNameById(player.equip.leftArm)};
-    if (player.equip.rightArm >= 0) { gEle("rightarm").value = getItemNameById(player.equip.rightArm)};
-    if (player.equip.torso >= 0) { gEle("torso").value = getItemNameById(player.equip.torso)};
-    if (player.equip.feet >= 0) { gEle("feet").value = getItemNameById(player.equip.feet)};
+    if (player.equip.head >= 0) { gEle("head").value = player.equip.head};
+    if (player.equip.leftArm >= 0) { gEle("leftarm").value = player.equip.leftArm};
+    if (player.equip.rightArm >= 0) { gEle("rightarm").value = player.equip.rightArm};
+    if (player.equip.torso >= 0) { gEle("torso").value = player.equip.torso};
+    if (player.equip.feet >= 0) { gEle("feet").value = player.equip.feet};
 
     // Party and Map
     gEle("currentparty").innerText = party.currentParty
@@ -177,11 +177,11 @@ function updateFromPlayer() {
     player.skillPoints[2] = strToNum(gVal("skillcold"));
     player.skillPoints[3] = strToNum(gVal("skillshock"));
     player.skillPoints[4] = strToNum(gVal("skillwave"));
-    player.equip.head = getItemIdByName(gVal("head"));
-    player.equip.leftArm = getItemIdByName(gVal("leftarm"));
-    player.equip.rightArm = getItemIdByName(gVal("rightarm"));
-    player.equip.torso = getItemIdByName(gVal("torso"));
-    player.equip.feet = getItemIdByName(gVal("feet"));
+    player.equip.head = gVal("head");
+    player.equip.leftArm = gVal("leftarm");
+    player.equip.rightArm = gVal("rightarm");
+    player.equip.torso = gVal("torso");
+    player.equip.feet = gVal("feet");
 
     party.currentParty = addToParty()
     gVal("partylevelcheck") && (party.models = setPartyLevel())
@@ -244,7 +244,6 @@ function getCurrentMap() {
 }
 
 // New Game options
-
 function updateFromNGPlus() {
     var ngPlus = getNGPlusData()
     if (saveFile && saveFile.newGamePlus && !gEle('ngplus-enable').checked) {
@@ -258,7 +257,6 @@ function updateFromNGPlus() {
         alert("New Game Plus data updated");
     }
 }
-
 function showNGOptions() {
     gEle('ngplus-enable').checked 
         ? gEle('ngoptions').style = `display: block;`
@@ -293,10 +291,32 @@ function getNGPlusData() {
     return ngData
 }
 
+// Equipment handler functions
+createEquipmentSelect()
+function createEquipmentSelect() {
+    gEle('head').innerHTML = "<option value='none'>Nothing</option>"
+    gEle('leftarm').innerHTML = "<option value='none'>Nothing</option>"
+    gEle('rightarm').innerHTML = "<option value='none'>Nothing</option>"
+    gEle('torso').innerHTML = "<option value='none'>Nothing</option>"
+    gEle('feet').innerHTML = "<option value='none'>Nothing</option>"
 
+    let gearList = { head: getEquipFromType("HEAD"), arm: getEquipFromType("ARM"), torso: getEquipFromType("TORSO"), feet: getEquipFromType("FEET")}
+    for (let i in gearList.head) {
+        gEle('head').innerHTML += `<option value=${gearList.head[i].id}>${gearList.head[i].name}</option>`
+    }
+    for (let i in gearList.arm) {
+        gEle('leftarm').innerHTML += `<option value=${gearList.arm[i].id}>${gearList.arm[i].name}</option>`
+        gEle('rightarm').innerHTML += `<option value=${gearList.arm[i].id}>${gearList.arm[i].name}</option>`
+    }
+    for (let i in gearList.torso) {
+        gEle('torso').innerHTML += `<option value=${gearList.torso[i].id}>${gearList.torso[i].name}</option>`
+    }
+    for (let i in gearList.feet) {
+        gEle('feet').innerHTML += `<option value=${gearList.feet[i].id}>${gearList.feet[i].name}</option>`
+    }
+}
 
 // Save Presets 
-
 const saveCreateBtn = document.getElementById('create-save-btn')
 const downloadPresetBtn = document.getElementById('download-preset-btn')
 const outputBox = document.getElementById('save-preset-result')
@@ -304,7 +324,6 @@ saveCreateBtn.addEventListener('click', (e) => createPreset(e));
 downloadPresetBtn.addEventListener('click', (e, presetOutput) => downloadSavePreset(e, presetOutput));
 
 let presetOutput
-
 const createPreset = (e) => { 
     e.preventDefault()
     let name = gVal("save-name-box") ? gVal("save-name-box") : "Name"
@@ -323,7 +342,6 @@ const createPreset = (e) => {
         return false;
     } 
 }
-
 const downloadSavePreset = (e) => {
     e.preventDefault()
     const link = document.createElement("a"); 
@@ -402,6 +420,19 @@ window.addEventListener('load', () => {
     alert("Flags updated.");
 }*/
 
+function getEquipFromType(type) {
+    let itemList = []
+    for (let i in items) {
+        let currentItem = items[i]
+        if ((currentItem.type === "EQUIP") && (type == currentItem.equipType)) {
+            itemList.push({ id: i, name: getItemNameById(i) });
+        }
+    }
+    console.log(itemList)
+    return itemList
+}
+
+// Decrypt and update funcs
 function updateFromDecrypted() {
     gEle("loadtext").value = outc(JSON.stringify(JSON.parse(gVal("savedecrypted"))), "a");
     updateFromFile();
@@ -421,12 +452,10 @@ function updateTextareas() {
 }
 
 // UTILS
-
 function getItemNameById(n) {
     if (n < 0 || n > items.length) return "";
     return items[n].name.en_US;
 }
-
 function getItemIdByName(s) {
     for (var i = 0; i < items.length; i++) {
         if (items[i].name.en_US == s) {
@@ -435,25 +464,20 @@ function getItemIdByName(s) {
     }
     return -1;
 }
-
 function gVal(i) { return document.getElementById(i).value; }
 function gEle(i) { return document.getElementById(i); }
-
 function inc(a, b) {
     if (b = 75 * b + "0") b = ":_." + b;
     var c = window.CryptoJS,
         a = a.substr(9, a.length);
     return c.AES.decrypt(a, b).toString(c.enc.Utf8);
 }
-
-
 function outc(a, b) {
     var c;
     if (b = 75 * b + "0") b = ":_." + b;
     c = window.CryptoJS.AES.encrypt(a, b).toString();
     return "[-!_0_!-]" + c;
 }
-
 function strToNum(s) {
     if (s.length === 0 || isNaN(s)) return null;
     else return Number(s);

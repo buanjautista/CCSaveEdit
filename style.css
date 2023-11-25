@@ -35,9 +35,14 @@ input.textBoxAlignItem {
     text-align: right;
 }
 
-input.textBoxAlignEquip {
+select.textBoxAlignEquip {
     float: right;
     width: 150px;
+    border: 1px solid gray;
+}
+
+select.textBoxAlignEquip:hover { 
+    background-color: gainsboro;
 }
 
 input.textBoxAlignFlags {
