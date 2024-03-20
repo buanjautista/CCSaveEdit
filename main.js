@@ -30,13 +30,11 @@ for (var i = 0; i < items.length; i++) {
 for (let map of Object.keys(mapList)) {
     let mapoption = document.createElement('option')
     mapoption.innerHTML = `<option id='${map}' value='${map}'>${map}</option>`
-    // console.log(mapdiv)
     gEle("selectmaplist").appendChild(mapoption)
 }
 
 const updateSelectValues = (e) => {
     // get map from the maplist, then extract all the markers and add them to select
-    // console.log(e)
     let map = mapList[e.target.value]
     let entryMenu = gEle("selectentrance")
     entryMenu.innerHTML = ""
@@ -47,7 +45,6 @@ const updateSelectValues = (e) => {
             markerdiv.id = `marker${i}`
             markerdiv.text = map.markers[i]
             entryMenu.appendChild(markerdiv)
-            // console.log(markerdiv)
         }
     }
     else {
@@ -185,7 +182,6 @@ function updateFromPlayer() {
 
     party.currentParty = addToParty()
     gVal("partylevelcheck") && (party.models = setPartyLevel())
-    // console.log("New party: ", party.currentParty)
 
     newMap = gVal("selectmaplist")
     newMarker = gVal("selectentrance") || "entrance"
@@ -219,20 +215,17 @@ function addToParty() {
     let newParty = []
     for (let i of partyField) {
         i.checked && newParty.push(i.value)
-        // console.log(i, newParty)
     }
     return newParty
 }
 function setPartyLevel() {
     var partyModels = saveFile.party.models
     var player = saveFile.player
-    // console.log(partyModels)
 
     for (let i of Object.values(partyModels)) {
         i.level = player.level
-        // console.log(i)
     }
-    // console.log(party)
+
     return partyModels
 }
 
@@ -258,13 +251,14 @@ function updateFromNGPlus() {
     }
 }
 function showNGOptions() {
-    gEle('ngplus-enable').checked 
-        ? gEle('ngoptions').style = `display: block;`
-        : gEle('ngoptions').style = `display: none;`
+    gEle('ngplus-enable').checked ? gEle('ngoptions').style = `display: block;` : gEle('ngoptions').style = `display: none;`
+    gEle('ngplusplus-enable').checked ? gEle('ngppoptions').style = `display: block;` : gEle('ngppoptions').style = `display: none;`
 }
 
 const ngPlusEnabler = document.getElementById('ngplus-enable')
+const ngPPEnabler = document.getElementById('ngplusplus-enable')
 ngPlusEnabler.addEventListener('change', showNGOptions)
+ngPPEnabler.addEventListener('change', showNGOptions)
 
 function getNGPlusData() {
     let ngData = { "options": {}, "active": true, "store": {} }
@@ -273,17 +267,18 @@ function getNGPlusData() {
 
     let selectableOptions = gEle('ngoptions').children[0].children
     let checkboxOptions = gEle('ngoptions').children[1].children
+
     for (let i of selectableOptions) {
         let currentValue = i.children[1].value
-        if (currentValue && (currentValue != "none")) {
-            options[currentValue] = true;
-        }
+        if (currentValue && (currentValue != "none")) { options[currentValue] = true; }
     }
     for (let i of checkboxOptions) {
         let currentEntry = i.children[0]
-        if (currentEntry.checked) {
-            options[currentEntry.name] = true;
-        }
+        if (currentEntry.checked) { options[currentEntry.name] = true; }
+    }
+    for (let i of gEle('ngppoptions').children[0].children) {
+            let currentEntry = i.children[0]
+            if (currentEntry.checked) { options[currentEntry.name] = gEle('ngplusplus-enable').checked; }
     }
 
     ngData.options = options
@@ -350,7 +345,6 @@ const downloadSavePreset = (e) => {
         createPreset;
         content = outputBox.value 
     }
-    // console.log(content)
     if (content == undefined || !gVal("savepreset")) { 
         alert('Please import a valid save on the File menu');
         return false;
@@ -380,7 +374,6 @@ gEle("advanced-checker").addEventListener('change', () => {
 
 // Keep settings from last session
 window.addEventListener('load', () => {
-    console.log("loading checkbox")
     let checkValue = localStorage.getItem('CC-Save-Exit-Extras')
     gEle("advanced-checker").checked = checkValue
     gEle('ngplus-enable').checked = false
@@ -428,7 +421,7 @@ function getEquipFromType(type) {
             itemList.push({ id: i, name: getItemNameById(i) });
         }
     }
-    console.log(itemList)
+    // console.log(itemList)
     return itemList
 }
 
