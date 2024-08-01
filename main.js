@@ -157,6 +157,8 @@ function updateFromFile() {
         if (i >= player.items.length) player.items[i] == null;
         gEle("item" + i).value = player.items[i];
     }
+
+    updateLast();
 }
 
 function updateFromPlayer() {
@@ -252,13 +254,13 @@ function updateFromNGPlus() {
 }
 function showNGOptions() {
     gEle('ngplus-enable').checked ? gEle('ngoptions').style = `display: block;` : gEle('ngoptions').style = `display: none;`
-    gEle('ngplusplus-enable').checked ? gEle('ngppoptions').style = `display: block;` : gEle('ngppoptions').style = `display: none;`
+    // gEle('ngplusplus-enable').checked ? gEle('ngppoptions').style = `display: block;` : gEle('ngppoptions').style = `display: none;`
 }
 
 const ngPlusEnabler = document.getElementById('ngplus-enable')
-const ngPPEnabler = document.getElementById('ngplusplus-enable')
+// const ngPPEnabler = document.getElementById('ngplusplus-enable')
 ngPlusEnabler.addEventListener('change', showNGOptions)
-ngPPEnabler.addEventListener('change', showNGOptions)
+// ngPPEnabler.addEventListener('change', showNGOptions)
 
 function getNGPlusData() {
     let ngData = { "options": {}, "active": true, "store": {} }
@@ -276,10 +278,10 @@ function getNGPlusData() {
         let currentEntry = i.children[0]
         if (currentEntry.checked) { options[currentEntry.name] = true; }
     }
-    for (let i of gEle('ngppoptions').children[0].children) {
-            let currentEntry = i.children[0]
-            if (currentEntry.checked) { options[currentEntry.name] = gEle('ngplusplus-enable').checked; }
-    }
+    // for (let i of gEle('ngppoptions').children[0].children) {
+    //         let currentEntry = i.children[0]
+    //         if (currentEntry.checked) { options[currentEntry.name] = gEle('ngplusplus-enable').checked; }
+    // }
 
     ngData.options = options
     ngData.store = store
@@ -442,6 +444,7 @@ function updateTextareas() {
     gEle("savedecrypted").value = JSON.stringify(saveFile);
     gEle("savespaced").value = JSON.stringify(saveFile, null, 4);
     gEle("loadtext").value = outc(JSON.stringify(saveFile), "a");
+    updateLast();
 }
 
 // UTILS
@@ -501,4 +504,16 @@ function changeTab(evt, cl, tab) {
     else { 
         evt.className += " active";
     }
+}
+function updateLast() {
+    let date = new Date;
+    let hour = date.getHours();
+    let minutes = date.getMinutes();
+    let seconds = date.getSeconds();
+    if (hour < 10) hour = "0" + hour;
+    if (minutes < 10) minutes = "0" + minutes;
+    if (seconds < 10) seconds = "0" + seconds;
+    let lastEdit = hour + ":" + minutes + ":" + seconds;
+    
+    gEle("last-change-info").innerText = lastEdit;
 }
