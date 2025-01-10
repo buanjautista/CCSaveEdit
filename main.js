@@ -141,7 +141,9 @@ function updateFromFile() {
             }
         }
     }
-
+    if (saveFile.vars.storage.plot && saveFile.vars.storage.plot['metaSpace']) {
+        gEle('metaspace-enable').checked = saveFile.vars.storage.plot['metaSpace'];
+    }
 
     /*var flags = saveFile.vars.storage.maps;
     gEle("bossCold1").checked = flags["coldDng/b3/room7"].bossKilled;
@@ -243,14 +245,13 @@ function updateFromNGPlus() {
     var ngPlus = getNGPlusData()
     if (saveFile && saveFile.newGamePlus && !gEle('ngplus-enable').checked) {
         saveFile.newGamePlus.active = false
-        updateTextareas();
-        alert("New Game Plus data updated");
     }
     if (gEle('ngplus-enable').checked) { 
         saveFile.newGamePlus = ngPlus
-        updateTextareas();
-        alert("New Game Plus data updated");
     }
+    saveFile.vars.storage.plot['metaSpace'] = Number(gEle('metaspace-enable').checked);
+    updateTextareas();
+    alert("New Game Plus data updated");
 }
 function showNGOptions() {
     gEle('ngplus-enable').checked ? gEle('ngoptions').style = `display: block;` : gEle('ngoptions').style = `display: none;`
@@ -258,8 +259,8 @@ function showNGOptions() {
 }
 
 const ngPlusEnabler = document.getElementById('ngplus-enable')
-// const ngPPEnabler = document.getElementById('ngplusplus-enable')
 ngPlusEnabler.addEventListener('change', showNGOptions)
+// const ngPPEnabler = document.getElementById('ngplusplus-enable')
 // ngPPEnabler.addEventListener('change', showNGOptions)
 
 function getNGPlusData() {
@@ -517,3 +518,20 @@ function updateLast() {
     
     gEle("last-change-info").innerText = lastEdit;
 }
+
+
+// INFO HOVER THING 
+gEle("metaspace-container").addEventListener('mouseenter', (evt) => hoverInfoWindow('meta', evt));
+gEle("metaspace-container").addEventListener('mouseleave', (evt) => hoverInfoWindow('', evt));
+function hoverInfoWindow(tab, evt) {
+    if(tab) { gEle("hover-window").style = `display: block; position:fixed; transform: translate(${evt.pageX}px, 0`; }
+    switch (tab) {
+        case 'meta': // Meta Space enable option
+            gEle("hover-text").innerText = 'This option enables a save file to be usable for carrying New Game + data.'; 
+            break;
+        default: 
+            gEle("hover-window").style = 'display: none';
+            break
+    }
+}
+

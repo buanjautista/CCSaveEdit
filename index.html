@@ -174,12 +174,18 @@
     </div>
 
     <div id="new-game-plus" class="tabcontent">
-        <div>
-            <button onclick="updateFromNGPlus()" style="margin-bottom: 5px">Apply Changes</button>
-            <h3>Enable New Game+
-                <input type="checkbox" name="ngplus-enable" id="ngplus-enable">
-            </h3>
-            <!-- <button onclick="getNGPlusData()">Send</button> -->
+        <button onclick="updateFromNGPlus()" style="margin-bottom: 5px">Apply Changes</button>
+        <div class="flex">
+            <div>
+                <h3>Enable New Game+
+                    <input type="checkbox" name="ngplus-enable" id="ngplus-enable">
+                </h3>
+            </div>
+            <div id="metaspace-container">
+                <h3>Carriable NG+ save
+                    <input type="checkbox" name="metaspace-enable" id="metaspace-enable">
+                </h3>
+            </div>
         </div>
 
         <div id="ngoptions" style="display: none;">
@@ -408,6 +414,9 @@
         <input type="checkbox" name="advanced-checker" id="advanced-checker">
     </div>
 
+    <div class="hover-window" id="hover-window">
+        <span id="hover-text"></span>
+    </div>
 
     <script type="text/javascript" src="itemj.js"></script>
     <script type="text/javascript" src="maplistentries.js"></script>
